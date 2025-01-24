@@ -1,0 +1,49 @@
+FROM php:8.2.0-fpm
+
+
+RUN apt-get update && apt-get install -y \
+    git \
+    curl \
+    zip \
+    unzip \
+    sudo \
+    libzip-dev \
+    libreoffice \
+    ffmpeg \
+    libmagickwand-dev \
+    imagemagick \
+    unoconv \
+    cron \
+    libfreetype6-dev \
+    libjpeg62-turbo-dev \
+    libpng-dev \
+    libpq-dev
+
+
+RUN docker-php-ext-install pdo pdo_mysql \
+    && docker-php-ext-install zip \
+    && docker-php-ext-install mysqli && docker-php-ext-enable mysqli \
+    && docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql \
+    && docker-php-ext-install pdo_pgsql pgsql \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install -j$(nproc) gd \
+    && pecl install imagick \
+    && docker-php-ext-enable imagick \
+    && rm /etc/ImageMagick-6/policy.xml \
+    && docker-php-ext-install opcache
+
+
+RUN curl -s https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin/ --filename=composer
+
+
+RUN pecl install xdebug \
+    && docker-php-ext-enable xdebug
+
+
+COPY ./conf/php.ini $PHP_INI_DIR/
+COPY ./conf/xdebug.ini $PHP_INI_DIR/conf.d/
+ADD conf/opcache.ini "$PHP_INI_DIR/conf.d/opcache.ini"
+
+
+
+WORKDIR /var/www

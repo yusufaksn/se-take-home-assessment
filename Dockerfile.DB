@@ -1,0 +1,13 @@
+FROM postgres:16
+
+ENV TZ=Europe/Istanbul
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
+RUN apt-get update && apt-get install -y tzdata
+ENV TZ Europe/Istanbul
+
+COPY conf/db/postgresql.conf /etc/postgresql/postgresql.conf
+
+RUN ln -fs /usr/share/zoneinfo/Europe/Istanbul /etc/localtime && dpkg-reconfigure -f noninteractive tzdata
+
+CMD ["postgres", "-c", "config_file=/etc/postgresql/postgresql.conf"]

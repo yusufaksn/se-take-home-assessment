@@ -1,0 +1,64 @@
+version: '3.6'
+
+services:
+  case_backend:
+    build:
+      context: ./
+      dockerfile: DockerFile
+    container_name: case_backend
+    restart: always
+    working_dir: ${WORK_DIR}
+    volumes:
+      - ${SOURCE_PATH}:${WORK_DIR}
+    networks:
+      - case_network
+    environment:
+      XDEBUG_CONFIG: client_host=${CLIENT_HOST}
+      DEBUG: 1
+      PHP_OPCACHE_VALIDATE_TIMESTAMPS: 1
+
+  case_nginx:
+    image: nginx:1.19-alpine
+    container_name: case_nginx
+    restart: always
+    ports:
+      - '8004:8004'
+    volumes:
+      - ${SOURCE_PATH}:${WORK_DIR}
+      - ./conf/nginx:/etc/nginx/conf.d
+    depends_on:
+      - case_backend
+    networks:
+      - case_network
+    extra_hosts:
+        - "host.docker.internal:host-gateway"
+
+  postgres_case_db:
+    container_name: postgres_case_db
+    build:
+      context: ./
+      dockerfile: Dockerfile.DB
+    hostname: postgres_case_db
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: case_db
+      TZ: Europe/Istanbul
+    volumes:
+      - postgres_case_db_volume_22012025:/var/lib/postgresql/data
+      - ./conf/db/postgresql.conf:/etc/postgresql/postgresql.conf
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+    ports:
+      - "5437:5437"
+    restart: unless-stopped
+    networks:
+      - case_network
+    expose:
+      - "5437"
+
+networks:
+  case_network:
+
+volumes:
+    postgres_case_db_volume_22012025:
