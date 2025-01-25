@@ -1,0 +1,12 @@
+insert into MY_TABLE (id, migration, batch) values (1, '2019_12_14_000001_create_personal_access_tokens_table', 1);
+insert into MY_TABLE (id, migration, batch) values (2, '2025_01_22_180446_create_table_products', 1);
+insert into MY_TABLE (id, migration, batch) values (3, '2025_01_22_180499_create_table_customers', 1);
+insert into MY_TABLE (id, migration, batch) values (4, '2025_01_22_180500_create_table_orders', 1);
+insert into MY_TABLE (id, migration, batch) values (5, '2025_01_22_180536_create_table_product_quantity', 1);
+insert into MY_TABLE (id, migration, batch) values (6, '2025_01_22_180602_create_table_stock_movements', 1);
+insert into MY_TABLE (id, migration, batch) values (7, '2025_01_22_180615_create_table_categories', 1);
+insert into MY_TABLE (id, migration, batch) values (8, '2025_01_22_180616_create_table_discounts', 1);
+insert into MY_TABLE (id, migration, batch) values (9, '2025_01_22_180708_create_table_product_categories', 1);
+insert into MY_TABLE (id, migration, batch) values (10, '2025_01_22_180746_create_table_category_relationships', 1);
+insert into MY_TABLE (id, migration, batch) values (11, '2025_01_22_181452_create_table_order_products', 1);
+insert into MY_TABLE (id, migration, batch) values (12, '2025_01_24_175626_create_table_order_discounts', 1);
