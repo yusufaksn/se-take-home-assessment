@@ -44,17 +44,21 @@ class SaveOrderAndDiscount {
                 'stock_quantity' => $value['quantity']
             ];
         }
-        $orderDiscounts = [];
-        foreach ($result['data']['discountIds'] as $value){
-            $orderDiscounts[] = [
-                'discount_id' => $value,
-                'order_id' => $orderId,
-                'created_at' => $this->now
-            ];
+        if(isset($result['data']['discountIds'])){
+            $orderDiscounts = [];
+            foreach ($result['data']['discountIds'] as $value){
+                $orderDiscounts[] = [
+                    'discount_id' => $value,
+                    'order_id' => $orderId,
+                    'created_at' => $this->now
+                ];
+            }
+            DB::table('order_discounts')->insert($orderDiscounts);
         }
+
         DB::table('order_products')->insert($orderProduct);
         DB::table('stock_movements')->insert($stockMovements);
-        DB::table('order_discounts')->insert($orderDiscounts);
+
 
         $query = "UPDATE product_quantity SET stock_quantity = CASE product_id ";
         foreach ($productQuantity as $item) {
